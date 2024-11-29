@@ -146,12 +146,19 @@ st.line_chart(ethnicity_groups)
 
 # Advanced Insights - Select a feature to analyze
 st.write("Advanced Insights:")
-selected_feature = st.selectbox("Select a feature to analyze its relationship with GPA:", ["Weekly_Study_Hours", "Absences", "Parental_Support", "Sports", "Music", "Volunteering"])
+selected_feature = st.selectbox(
+    "Select a feature to analyze its relationship with GPA:", 
+    ["Weekly_Study_Hours", "Absences", "Parental_Support", "Sports", "Music", "Volunteering"]
+)
 
-# Group by the selected feature and calculate the average GPA
-avg_gpa_by_feature = df.groupby(selected_feature)["Current_GPA"].mean().sort_values()
-st.write(f"Average GPA based on {selected_feature}:")
-st.bar_chart(avg_gpa_by_feature)
+# Check if the selected feature exists in the dataframe
+if selected_feature in df.columns:
+    # Group by the selected feature and calculate the average GPA
+    avg_gpa_by_feature = df.groupby(selected_feature)["Current_GPA"].mean().sort_values()
+    st.write(f"Average GPA based on {selected_feature}:")
+    st.bar_chart(avg_gpa_by_feature)
+else:
+    st.error(f"Selected feature '{selected_feature}' does not exist in the dataset.")
 
 
 
