@@ -140,13 +140,13 @@ st.write(f"Not At Risk: {at_risk_count[0]} ({at_risk_count[0] / len(df) * 100:.2
 st.bar_chart(at_risk_count)
 
 # Display the column names to make sure the dataframe is correct
-st.write("Columns in the dataframe:", df.columns)
+# st.write("Columns in the dataframe:", df.columns)
 
 # Advanced Insights - Select a feature to analyze
 st.write("Advanced Insights:")
 selected_feature = st.selectbox(
     "Select a feature to analyze its relationship with GPA:", 
-    ["Weekly_Study_Hours", "Absences", "Parental_Support", "Sports", "Music", "Volunteering"]
+    ["Weekly_Study_Hours", "Absences", "Sports", "Music", "Volunteering"]
 )
 
 # Check if the selected feature exists in the dataframe
