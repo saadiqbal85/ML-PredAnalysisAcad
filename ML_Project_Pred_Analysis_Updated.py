@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, accuracy_score
 
 # Generate Synthetic Data
 np.random.seed(42)
@@ -119,8 +115,6 @@ st.write("Top Features Influencing GPA:")
 correlations = df.corr()["Current_GPA"].drop("Current_GPA").sort_values(ascending=False)
 st.bar_chart(correlations)
 
-
-# In[ ]:
 
 
 
