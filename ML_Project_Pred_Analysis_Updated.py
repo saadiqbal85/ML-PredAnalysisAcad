@@ -26,10 +26,10 @@ data = {
 
 # Generate Target Variables
 data["Current_GPA"] = (
-    0.3 * data["Weekly_Study_Hours"] -
-    0.1 * data["Absences"] +
-    0.15 * data["Past_GPA"] +
-    0.1 * (data["Sports"] + data["Music"] + data["Volunteering"]) +
+    0.3 * np.array(data["Weekly_Study_Hours"]) -
+    0.1 * np.array(data["Absences"]) +
+    0.15 * np.array(data["Past_GPA"]) +
+    0.1 * (np.array(data["Sports"]) + np.array(data["Music"]) + np.array(data["Volunteering"])) +
     np.random.normal(0, 0.3, n_samples)
 )
 data["Current_GPA"] = np.clip(data["Current_GPA"], 0, 4)
@@ -58,11 +58,11 @@ clf_model.fit(X_train, y_train_risk)
 st.title("Student Performance Predictor")
 
 # Sidebar Inputs
-st.sidebar.header("Input Features")
+st.sidebar.header("Interactive Features")
 age = st.sidebar.slider("Age", 15, 25, 20)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 ethnicity = st.sidebar.selectbox("Ethnicity", ["Caucasian", "African American", "Asian", "Other"])
-parental_education = st.sidebar.selectbox("Parental Education", ["None", "High School", "College", "Bachelor", "Higher Education"])
+parental_education = st.sidebar.selectbox("Parental Education", ["None", "High School", "College", "Bachelor's", "Higher Education"])
 parental_support = st.sidebar.selectbox("Parental Support", ["None", "Low", "Moderate", "High", "Very High"])
 study_hours = st.sidebar.slider("Weekly Study Hours", 1, 20, 10)
 absences = st.sidebar.slider("Number of Absences", 0, 15, 3)
@@ -74,29 +74,37 @@ past_gpa = st.sidebar.slider("Past GPA", 0.0, 4.0, 3.0)
 # Prepare Input Data
 input_data = {
     "Age": [age],
-    "Parental_Education": [parental_education],
-    "Parental_Support": [parental_support],
     "Weekly_Study_Hours": [study_hours],
     "Absences": [absences],
     "Sports": [sports],
     "Music": [music],
     "Volunteering": [volunteering],
-    "Past_GPA": [past_gpa],
-    "Gender_Male": [1 if gender == "Male" else 0],
-    "Ethnicity_African American": [1 if ethnicity == "African American" else 0],
-    "Ethnicity_Asian": [1 if ethnicity == "Asian" else 0],
-    "Ethnicity_Other": [1 if ethnicity == "Other" else 0],
-    "Parental_Education_High School": [1 if parental_education == "High School" else 0],
-    "Parental_Education_College": [1 if parental_education == "College" else 0],
-    "Parental_Education_Bachelor": [1 if parental_education == "Bachelor" else 0],
-    "Parental_Education_Higher Education": [1 if parental_education == "Higher Education" else 0],
-    "Parental_Support_Low": [1 if parental_support == "Low" else 0],
-    "Parental_Support_Moderate": [1 if parental_support == "Moderate" else 0],
-    "Parental_Support_High": [1 if parental_support == "High" else 0],
-    "Parental_Support_Very High": [1 if parental_support == "Very High" else 0]
+    "Past_GPA": [past_gpa]
 }
 
+# Handle Dummy Variables
+categorical_features = {
+    "Gender_Male": 1 if gender == "Male" else 0,
+    "Ethnicity_African American": 1 if ethnicity == "African American" else 0,
+    "Ethnicity_Asian": 1 if ethnicity == "Asian" else 0,
+    "Ethnicity_Other": 1 if ethnicity == "Other" else 0,
+    "Parental_Education_High School": 1 if parental_education == "High School" else 0,
+    "Parental_Education_College": 1 if parental_education == "College" else 0,
+    "Parental_Education_Bachelor's": 1 if parental_education == "Bachelor's" else 0,
+    "Parental_Education_Higher Education": 1 if parental_education == "Higher Education" else 0,
+    "Parental_Support_Low": 1 if parental_support == "Low" else 0,
+    "Parental_Support_Moderate": 1 if parental_support == "Moderate" else 0,
+    "Parental_Support_High": 1 if parental_support == "High" else 0,
+    "Parental_Support_Very High": 1 if parental_support == "Very High" else 0
+}
+input_data.update(categorical_features)
 input_df = pd.DataFrame(input_data)
+
+# Align with Training Features
+missing_cols = set(X_train.columns) - set(input_df.columns)
+for col in missing_cols:
+    input_df[col] = 0
+input_df = input_df[X_train.columns]
 
 # Predictions
 predicted_gpa = reg_model.predict(input_df)[0]
@@ -109,12 +117,9 @@ st.write(f"At Risk: **{'Yes' if at_risk == 1 else 'No'}**")
 
 # Data Insights Section
 st.subheader("Data Insights")
-
-# Correlation Analysis
 st.write("Top Features Influencing GPA:")
 correlations = df.corr()["Current_GPA"].drop("Current_GPA").sort_values(ascending=False)
 st.bar_chart(correlations)
-
 
 
 
