@@ -121,9 +121,14 @@ st.write("Top Features Influencing GPA:")
 correlations = df.corr()["Current_GPA"].drop("Current_GPA").sort_values(ascending=False)
 st.bar_chart(correlations)
 
-# GPA Distribution
+# GPA Distribution using Matplotlib
 st.write("Distribution of Current GPA:")
-st.histogram(df["Current_GPA"], bins=20, title="GPA Distribution", color="blue")
+fig, ax = plt.subplots()
+ax.hist(df["Current_GPA"], bins=20, color="blue", alpha=0.7)
+ax.set_title("GPA Distribution")
+ax.set_xlabel("GPA")
+ax.set_ylabel("Frequency")
+st.pyplot(fig)  # Display the plot in Streamlit
 
 
 
