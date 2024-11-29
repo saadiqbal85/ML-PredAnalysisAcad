@@ -121,6 +121,10 @@ st.write("Top Features Influencing GPA:")
 correlations = df.corr()["Current_GPA"].drop("Current_GPA").sort_values(ascending=False)
 st.bar_chart(correlations)
 
+# GPA Distribution
+st.write("Distribution of Current GPA:")
+st.histogram(df["Current_GPA"], bins=20, title="GPA Distribution", color="blue")
+
 
 
 
