@@ -15,11 +15,11 @@ from sklearn.metrics import mean_squared_error, accuracy_score
 np.random.seed(42)
 n_samples = 1000
 data = {
-    "Age": np.random.randint(13, 19, n_samples),
+    "Age": np.random.randint(15, 25, n_samples),
     "Gender": np.random.choice(["Male", "Female"], n_samples),
     "Ethnicity": np.random.choice(["Caucasian", "African American", "Asian", "Other"], n_samples),
-    "Parental_Education": np.random.randint(1, 5, n_samples),
-    "Parental_Support": np.random.randint(1, 10, n_samples),
+    "Parental_Education": np.random.choice(["None", "High School", "College", "Bachelor's", "Higher Education"], n_samples),
+    "Parental_Support": np.random.choice(["None", "Low", "Moderate", "High", "Very High"], n_samples),
     "Weekly_Study_Hours": np.random.randint(1, 20, n_samples),
     "Absences": np.random.randint(0, 15, n_samples),
     "Sports": np.random.choice([0, 1], n_samples),
@@ -32,7 +32,6 @@ data = {
 data["Current_GPA"] = (
     0.3 * data["Weekly_Study_Hours"] -
     0.1 * data["Absences"] +
-    0.2 * data["Parental_Support"] +
     0.15 * data["Past_GPA"] +
     0.1 * (data["Sports"] + data["Music"] + data["Volunteering"]) +
     np.random.normal(0, 0.3, n_samples)
@@ -43,7 +42,7 @@ data["At_Risk"] = (data["Current_GPA"] < 2.5).astype(int)
 df = pd.DataFrame(data)
 
 # Convert Categorical Columns
-df = pd.get_dummies(df, columns=["Gender", "Ethnicity"], drop_first=True)
+df = pd.get_dummies(df, columns=["Gender", "Ethnicity", "Parental_Education", "Parental_Support"], drop_first=True)
 
 # Split Data
 X = df.drop(columns=["Current_GPA", "At_Risk"])
@@ -64,11 +63,11 @@ st.title("Student Performance Predictor")
 
 # Sidebar Inputs
 st.sidebar.header("Input Features")
-age = st.sidebar.slider("Age", 13, 19, 16)
+age = st.sidebar.slider("Age", 15, 25, 20)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 ethnicity = st.sidebar.selectbox("Ethnicity", ["Caucasian", "African American", "Asian", "Other"])
-parental_education = st.sidebar.selectbox("Parental Education", [1, 2, 3, 4])
-parental_support = st.sidebar.slider("Parental Support (1-10)", 1, 10, 5)
+parental_education = st.sidebar.selectbox("Parental Education", ["None", "High School", "College", "Bachelor", "Higher Education"])
+parental_support = st.sidebar.selectbox("Parental Support", ["None", "Low", "Moderate", "High", "Very High"])
 study_hours = st.sidebar.slider("Weekly Study Hours", 1, 20, 10)
 absences = st.sidebar.slider("Number of Absences", 0, 15, 3)
 sports = st.sidebar.selectbox("Participates in Sports?", [0, 1])
@@ -90,7 +89,15 @@ input_data = {
     "Gender_Male": [1 if gender == "Male" else 0],
     "Ethnicity_African American": [1 if ethnicity == "African American" else 0],
     "Ethnicity_Asian": [1 if ethnicity == "Asian" else 0],
-    "Ethnicity_Other": [1 if ethnicity == "Other" else 0]
+    "Ethnicity_Other": [1 if ethnicity == "Other" else 0],
+    "Parental_Education_High School": [1 if parental_education == "High School" else 0],
+    "Parental_Education_College": [1 if parental_education == "College" else 0],
+    "Parental_Education_Bachelor": [1 if parental_education == "Bachelor" else 0],
+    "Parental_Education_Higher Education": [1 if parental_education == "Higher Education" else 0],
+    "Parental_Support_Low": [1 if parental_support == "Low" else 0],
+    "Parental_Support_Moderate": [1 if parental_support == "Moderate" else 0],
+    "Parental_Support_High": [1 if parental_support == "High" else 0],
+    "Parental_Support_Very High": [1 if parental_support == "Very High" else 0]
 }
 
 input_df = pd.DataFrame(input_data)
