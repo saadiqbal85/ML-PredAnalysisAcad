@@ -118,9 +118,17 @@ st.write(f"At Risk: **{'Yes' if at_risk == 1 else 'No'}**")
 
 # Data Insights Section
 st.subheader("Data Insights")
-st.write("Top Features Influencing GPA:")
+st.write("Top 3 Features Influencing GPA:")
+
+# Calculate the correlations
 correlations = df.corr()["Current_GPA"].drop("Current_GPA").sort_values(ascending=False)
-st.bar_chart(correlations)
+
+# Select the top 3 most correlated variables
+top_3_correlations = correlations.head(3)
+
+# Create a bar chart for the top 3 most correlated variables
+st.bar_chart(top_3_correlations)
+
 
 # GPA Distribution using Matplotlib
 st.write("Distribution of Current GPA:")
