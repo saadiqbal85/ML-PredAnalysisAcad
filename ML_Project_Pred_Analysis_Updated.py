@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+    #!/usr/bin/env python
 # coding: utf-8
 
 import streamlit as st
@@ -143,6 +143,9 @@ st.bar_chart(at_risk_count)
 st.write("Feature Trends by Ethnicity:")
 ethnicity_groups = df.groupby("Ethnicity").mean()[["Weekly_Study_Hours", "Current_GPA"]]
 st.line_chart(ethnicity_groups)
+
+# Display the column names to make sure the dataframe is correct
+st.write("Columns in the dataframe:", df.columns)
 
 # Advanced Insights - Select a feature to analyze
 st.write("Advanced Insights:")
