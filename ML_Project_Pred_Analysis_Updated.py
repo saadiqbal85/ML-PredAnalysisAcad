@@ -131,6 +131,29 @@ ax.set_xlabel("GPA")
 ax.set_ylabel("Frequency")
 st.pyplot(fig)  # Display the plot in Streamlit
 
+# At-Risk Analysis
+st.write("At-Risk Analysis:")
+at_risk_count = df["At_Risk"].value_counts()
+st.write(f"Total Students: {len(df)}")
+st.write(f"At Risk: {at_risk_count[1]} ({at_risk_count[1] / len(df) * 100:.2f}%)")
+st.write(f"Not At Risk: {at_risk_count[0]} ({at_risk_count[0] / len(df) * 100:.2f}%)")
+st.bar_chart(at_risk_count)
+
+# Feature Trends by Ethnicity - Group by the original 'Ethnicity' categories
+st.write("Feature Trends by Ethnicity:")
+ethnicity_groups = df.groupby("Ethnicity").mean()[["Weekly_Study_Hours", "Current_GPA"]]
+st.line_chart(ethnicity_groups)
+
+# Advanced Insights - Select a feature to analyze
+st.write("Advanced Insights:")
+selected_feature = st.selectbox("Select a feature to analyze its relationship with GPA:", 
+                                ["Weekly_Study_Hours", "Absences", "Parental_Support", "Sports", "Music", "Volunteering"])
+
+# Group by the selected feature and calculate the average GPA
+avg_gpa_by_feature = df.groupby(selected_feature)["Current_GPA"].mean().sort_values()
+st.write(f"Average GPA based on {selected_feature}:")
+st.bar_chart(avg_gpa_by_feature)
+
 
 
 
