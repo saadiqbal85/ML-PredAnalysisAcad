@@ -139,11 +139,6 @@ st.write(f"At Risk: {at_risk_count[1]} ({at_risk_count[1] / len(df) * 100:.2f}%)
 st.write(f"Not At Risk: {at_risk_count[0]} ({at_risk_count[0] / len(df) * 100:.2f}%)")
 st.bar_chart(at_risk_count)
 
-# Feature Trends by Ethnicity - Group by the original 'Ethnicity' categories
-st.write("Feature Trends by Ethnicity:")
-ethnicity_groups = df.groupby("Ethnicity").mean()[["Weekly_Study_Hours", "Current_GPA"]]
-st.line_chart(ethnicity_groups)
-
 # Display the column names to make sure the dataframe is correct
 st.write("Columns in the dataframe:", df.columns)
 
